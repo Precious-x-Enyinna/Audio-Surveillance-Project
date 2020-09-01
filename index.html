@@ -1,0 +1,67 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+
+    <title>Audio Stream</title>
+
+    <link rel="stylesheet" href="/materialize.min.css" />
+    <link rel="stylesheet" href="/material-icons.css" />
+    <link rel="stylesheet" href="/style.css"/>
+    <link rel="stylesheet" href="/font-awesome.min.css">
+</head>
+
+<body>
+    <div class="main_">
+        <h1 class="h1">Live Audio Feed </h1>
+        <div id="loading"></div>
+        <!-- <div class="mainAudio">
+            <audio src="/secondary/main.wav" controls></audio>
+        </div> -->
+        
+        <div id="audioPlayer">
+            <canvas id="progress" width="300" height="100"></canvas>
+            <audio id="audio" ontimeupdate="updateBar()" onended="loadNext()"></audio>
+            <div class="row container">
+                <br />
+                <span id="current-time"></span> /
+                <span id="duration"></span>
+                <ul>
+                    <li class="col s2 l2 offset-l1 offset-s1">
+                        <a href="#" class="tooltipped" data-tooltip="pause">
+                            <i class="material-icons" id="rewind">fast_rewind</i></a>
+                    </li>
+                    <li class="col s2 l2">
+                        <i class="material-icons" id="stop">stop</i>
+                    </li>
+                    <li class="col s2 l2" id="controls">
+                        <a href="#" class="tooltipped" data-tooltip="play">
+                            <i class="material-icons">play_circle_outline</i>
+                        </a>
+                    </li>
+                    <li class="col s2 l2">
+                        <i class="material-icons" id="restart">replay</i>
+                    </li>
+                    <li class="col s2 l2">
+                        <a href="#" class="tooltipped" data-tooltip="pause">
+                            <i class="material-icons" id="forward">fast_forward</i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="row container">
+                <p id="nameOfAudioPlaying"></p>
+            </div>
+        </div>
+        <div class="container center">
+            <div class="btn btn-small btn-success" id="fullAudio"><span class="text-white">Full Audio</span></div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="control.js"></script>
+</body>
+
+
+</html>

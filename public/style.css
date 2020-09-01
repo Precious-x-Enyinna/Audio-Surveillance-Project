@@ -1,0 +1,38 @@
+* {
+    margin: auto;
+    text-align: center;
+}
+
+.main_ {
+    border: 2px solid black;
+    width: 50%;
+    height: 400px;
+}
+
+.container {
+    width: 80%;
+}
+
+li {
+    cursor: default;
+}
+
+.h1 {
+    padding-top: 10px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    font-size: 26px;
+}
+
+canvas {
+    height: 30px;
+}
+
+@media screen and (max-width: 670px) {
+    canvas {
+        width: 100px;
+    }
+    h1 {
+        font-size: 20px;
+    }
+}
