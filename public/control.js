@@ -68,8 +68,14 @@ $(document).ready(function() {
 
         socket.on('load', (loadedFiles) => {
             if (awaitingFile) {
+                console.log("waiting for file");
                 loadAudio(loadedFiles);
+            } else {
+                if (audio.paused) {
+                    playAudio();
+                }
             }
+
             loadedFileSave = loadedFiles;
             console.log("load");
         })
@@ -108,15 +114,16 @@ var pauseAudio = function() {
 }
 
 var loadAudio = function(loadedFiles) {
-    fileNum++;
-    currentFile = "file" + fileNum.toString() + ".wav";
-    if (loadedFiles >= fileNum) {
+    if (loadedFiles > fileNum) {
+        fileNum++;
+        currentFile = "file" + fileNum.toString() + ".wav";
         audio.src = "/Secondary/" + currentFile;
         awaitingFile = false;
         document.getElementById("loading").innerHTML = "";
         document.getElementById("nameOfAudioPlaying").innerHTML = "Currently playing " + audio.src;
         audio.load();
     } else {
+        pauseAudio();
         document.getElementById("loading").innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
         awaitingFile = true;
     }

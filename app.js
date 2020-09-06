@@ -4,7 +4,7 @@ var net = require('net');
 var events = require('events');
 
 const settings = {
-    ip: "192.168.43.75",
+    ip: "192.168.43.131" /* "192.168.43.75" */ ,
     port: 81
 };
 
