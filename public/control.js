@@ -67,8 +67,12 @@ $(document).ready(function() {
         socket.on('pause', function() {
             pauseAudio();
         })
+        var toReload = setTimeout(function() {
+            window.location.reload();
+        }, 1 * 1000);
 
         socket.on('load', (loadedFiles) => {
+            clearTimeout(toReload);
             if (awaitingFile) {
                 console.log("waiting for file");
                 loadAudio(loadedFiles);

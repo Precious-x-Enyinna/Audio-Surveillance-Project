@@ -145,16 +145,20 @@ client.connect(settings.port, settings.ip, function() {
 var switchFile;
 //start interval after page has rendered
 pageRender.on('rendered', function() {
-    if (switchFile != null) {
-        clearInterval(switchFile);
-    }
-    fileNum = 0;
-    fileToDelete = 0;
-    console.log("Page Rendered");
-    writeToNext();
-    switchFile = setInterval(function() {
-        writeToNext();
-    }, 10 * 1000);
+    setTimeout(function() {
+        if (switchFile != null) {
+            clearInterval(switchFile);
+        }
+        fs.renameSync(__dirname + "/public/Secondary/file" + fileNum.toString() + ".wav", __dirname + "/public/Secondary/file1.wav");
+        controlAudio.emit('load');
+        fileNum = 1;
+        fileToDelete = 1;
+        console.log("Page Rendered");
+        switchFile = setInterval(function() {
+            writeToNext();
+        }, 10 * 1000);
+    }, 1000)
+
 });
 
 
