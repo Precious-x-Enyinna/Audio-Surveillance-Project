@@ -7,6 +7,7 @@ var fileNum = 0;
 var currentFile;
 var awaitingFile = true;
 var loadedFileSave = 0;
+var askedToLoadNext = false;
 var pauseIcon =
     '<a href="#" class="tooltipped" data-tooltip="pause"><i class="material-icons">pause_circle_outline</i></a>';
 var playIcon =
@@ -48,7 +49,8 @@ restart.onclick = function() {
     audio.currentTime = 0;
 };
 fullAudioBtn.onclick = function() {
-        document.getElementById("audioPlayer").innerHTML = '<audio src="/secondary/main.wav" controls></audio>'
+        document.getElementById("audioPlayer").innerHTML = '<audio src="/secondary/main.wav" controls></audio>';
+        //socket.broadcast.emit('stop');
     }
     // stopAudio.onclick = function() {
     //     alert("heyyyy")
@@ -65,28 +67,37 @@ $(document).ready(function() {
         socket.on('pause', function() {
             pauseAudio();
         })
+        var toReload = setTimeout(function() {
+            window.location.reload();
+        }, 1 * 1000);
 
         socket.on('load', (loadedFiles) => {
+            clearTimeout(toReload);
             if (awaitingFile) {
+                console.log("waiting for file");
                 loadAudio(loadedFiles);
+                if (askedToLoadNext) {
+                    playAudio();
+                }
             }
+
             loadedFileSave = loadedFiles;
             console.log("load");
         })
     })
 
     // $('#audio').on('play', function() {
-    //     socket.broadcast.emit('play');
+    //     socket.emit('played');
     //     return false;
     // })
     // $('#audio').on('pause', function() {
-    //     socket.broadcast.emit('pause');
+    //     socket.emit('paused');
     //     return false;
     // })
-    $('#stop').on('click', function() {
-        socket.broadcast.emit('stop');
-        return false;
-    })
+    // $('#stop').on('click', function() {
+    //     socket.emit('stopped');
+    //     return false;
+    // })
 });
 
 var playorpause = function() {
@@ -108,15 +119,18 @@ var pauseAudio = function() {
 }
 
 var loadAudio = function(loadedFiles) {
-    fileNum++;
-    currentFile = "file" + fileNum.toString() + ".wav";
-    if (loadedFiles >= fileNum) {
+    if (loadedFiles > fileNum) {
+        fileNum++;
+        currentFile = "file" + fileNum.toString() + ".wav";
         audio.src = "/Secondary/" + currentFile;
         awaitingFile = false;
         document.getElementById("loading").innerHTML = "";
         document.getElementById("nameOfAudioPlaying").innerHTML = "Currently playing " + audio.src;
         audio.load();
     } else {
+        if (!audio.paused) {
+            pauseAudio();
+        }
         document.getElementById("loading").innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i>';
         awaitingFile = true;
     }
@@ -124,9 +138,12 @@ var loadAudio = function(loadedFiles) {
 
 var loadNext = function() {
     loadAudio(loadedFileSave);
-    console.log("load");
-    playAudio();
-    console.log("playing" + audio.src)
+    if (!awaitingFile) {
+        playAudio();
+        console.log("load");
+        console.log("playing" + audio.src)
+    }
+    askedToLoadNext = true;
 }
 
 function updateBar() {

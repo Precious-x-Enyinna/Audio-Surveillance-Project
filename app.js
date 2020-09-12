@@ -4,7 +4,7 @@ var net = require('net');
 var events = require('events');
 
 const settings = {
-    ip: "192.168.43.75",
+    ip: "192.168.43.131" /* "192.168.43.75" */ ,
     port: 81
 };
 
@@ -85,15 +85,15 @@ app.get('/', function(req, res) {
 io.on('connection', (socket) => {
     console.log('a user connected');
     //Get info from webpage such as played, pause or stop
-    socket.on('play', function() {
+    socket.on('played', function() {
         playing = true;
         console.log("played");
     });
-    socket.on('pause', function() {
+    socket.on('paused', function() {
         playing = false;
         console.log('paused');
     });
-    socket.on('stop', function() {
+    socket.on('stopped', function() {
         playing = false;
         console.log('stopped');
         endStream();
@@ -109,7 +109,7 @@ io.on('connection', (socket) => {
         console.log('paused');
     });
     controlAudio.on('load', function() {
-        socket.broadcast.emit('load', fileNum);
+        socket.broadcast.emit('load', fileNum - 1);
         // console.log('load');
     });
     socket.on('disconnect', () => {
@@ -145,22 +145,32 @@ client.connect(settings.port, settings.ip, function() {
 var switchFile;
 //start interval after page has rendered
 pageRender.on('rendered', function() {
-    console.log("Page Rendered");
-    switchFile = setInterval(function() {
-        writeToNext();
-    }, 10 * 1000);
+    setTimeout(function() {
+        if (switchFile != null) {
+            clearInterval(switchFile);
+        }
+        fs.renameSync(__dirname + "/public/Secondary/file" + fileNum.toString() + ".wav", __dirname + "/public/Secondary/file1.wav");
+        controlAudio.emit('load');
+        fileNum = 1;
+        fileToDelete = 1;
+        console.log("Page Rendered");
+        switchFile = setInterval(function() {
+            writeToNext();
+        }, 10 * 1000);
+    }, 1000)
+
 });
 
 
 function writeToNext() {
     secStream.end();
+    fileNum++;
     controlAudio.emit('load');
     console.log("Loaded " + secStreamName);
     if (fileNum > 20) {
         fileToDelete++;
         fs.unlink(__dirname + "/public/Secondary/file" + fileToDelete.toString() + ".wav", (err) => {});
     }
-    fileNum++;
     secStreamName = __dirname + "/public/Secondary/file" + fileNum.toString() + ".wav";
     secStream = fs.createWriteStream(secStreamName);
     writeHeader(secStream);

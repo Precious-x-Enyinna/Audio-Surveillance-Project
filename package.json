@@ -1,0 +1,29 @@
+{
+  "name": "audio-project",
+  "version": "1.0.0",
+  "description": "Audio Surveillance project: Enyinna and Precious",
+  "main": "app.js",
+  "scripts": {
+    "test": "start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Precious-x-Enyinna/Audio-Surveillance-Project.git"
+  },
+  "keywords": [
+    "Audio",
+    "surveillance",
+    "recording",
+    "nodemcu"
+  ],
+  "author": "Nnam, Precious; Nwala, Enyinna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Precious-x-Enyinna/Audio-Surveillance-Project/issues"
+  },
+  "homepage": "https://github.com/Precious-x-Enyinna/Audio-Surveillance-Project#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socketio": "^1.0.0"
+  }
+}
