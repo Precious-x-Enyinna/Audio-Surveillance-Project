@@ -68,7 +68,7 @@ $(document).ready(function() {
             pauseAudio();
         })
         var toReload = setTimeout(function() {
-            window.location.reload();
+            document.location.reload();
         }, 1 * 1000);
 
         socket.on('load', (loadedFiles) => {
