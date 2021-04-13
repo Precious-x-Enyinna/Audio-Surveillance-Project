@@ -4,10 +4,10 @@ var net = require('net');
 var events = require('events');
 
 const settings = {
-    ip: "192.168.43.75",
+    host: "192.168.43.17",
     /* "192.168.43.131" */
-    /* "192.168.43.17" */
-    port: 81
+    /* "192.168.43.75" */
+    port: 8081
 };
 
 
@@ -23,7 +23,7 @@ var writeHeader = function(currStream) {
     var b = new Buffer.alloc(1024);
     b.write('RIFF', 0);
     /* file length */
-    b.writeUInt32LE(4 + (8 + 16) + (8 + (8000 * 30 * 2 * 2)), 4);
+    b.writeUInt32LE(4 + (8 + 16) + (8 + (8000 * 10 * 2 * 2)), 4);
     //b.writeUint32LE(0, 4);
 
     b.write('WAVE', 8);
@@ -123,26 +123,36 @@ io.on('connection', (socket) => {
 http.listen(3000);
 
 
-var client = new net.Socket();
-console.log("connecting...");
-client.connect(settings.port, settings.ip, function() {
-    client.setNoDelay(true);
+const server = new net.createServer((client) => {
+    // client.setNoDelay(true);
     console.log("Trying to connect");
-    client.write("This is the client speaking...");
-
+    // client.write("This is the client speaking...");
+    server.on('connection', function(client) {
+        console.log('A new connection has been established.');
+    })
     client.on("data", function(data) {
         try {
-            //console.log("GOT DATA");
             secStream.write(data);
             mainStream.write(data);
             //mainStream.flush();
-            //console.log("got chunk of " + data.length);
+            // console.log("got chunk of " + data.length);
         } catch (ex) {
             console.error("Er!" + ex);
         }
     });
+
+    client.on('end', () => {
+        console.log('client disconnected');
+    });
+
 });
 
+server.on('error', (err) => {
+    throw err;
+});
+server.listen(settings.port, settings.host, () => {
+    console.log('Server running on port ' + settings.port);
+});
 
 var switchFile;
 //start interval after page has rendered
