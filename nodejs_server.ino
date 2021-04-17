@@ -19,12 +19,12 @@ const uint16_t port = 8081;
 // Set password
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
-char auth[] = "D_0Vx6ZP77GJsjxIyXys8rTfdaoiK11O";
+char auth[] = "D__0Vx6ZP77GJsjxIyXys8rTfdaoiK11O_";
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
-char ssid[] = ".";
-char pass[] = "emmanuel";
+char ssid[] = "******";
+char pass[] = "*******";
 
 // Use Virtual pin 5 for uptime display
 //#define PIN_UPTIME V5
